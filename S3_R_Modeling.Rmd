@@ -16,6 +16,10 @@ In this session, we will learn some basics on modeling, namely two important tec
 1. [Linear Regression](#part1)
 2. [Logistic Regression](#part2)
 
+# running shortcut is control + enter
+# inserting chunk shortcut is control + alt + i
+
+
 ____
 
 This session will work with a collection of indexes:
@@ -26,6 +30,22 @@ indexes=read.csv(link,stringsAsFactors = F)
 
 names(indexes)
 ```
+# factor is category; stringAsFactors is telling R to read text as categories
+#eval= True asks to show the results
+
+```{r}
+summary(indexes)
+```
+```{r, eval=TRUE}
+str(indexes, width=50, strict.width='cut')
+```
+# width is saying they want only 50 lines; and cut (as you see the ellipsis) instead of moving onto the next line
+
+```{r, eval=TRUE}
+table(indexes$presscat)
+```
+
+
 
 * The _corruptionIndex_ is the _Corruption Perception Index_ (CPI) produced by [Transparency International](https://www.transparency.org/).
 
@@ -97,6 +117,8 @@ for (x in explanans){
 }
 
 ```
+#columns = c and columns start from 1, not 0 like Python
+#explanans is only explaining the names
 
 The level of correlation is moderate to low. 
 
@@ -118,6 +140,7 @@ Given the above exploration, we can go and request a linear regression model:
 LinRegEPI = lm(environment ~ corruptionIndex + scoreEconomy + scorepress, data = indexes)
 
 ```
+#environment is independent variable, the others are dependent, data name is indexes
 
 That was it! I just told R that the Y (*environment*) is to be regressed (**~**) by all those X variables (*corruptionIndex + scoreEconomy + scorepressOK*).
 
@@ -145,6 +168,7 @@ The way to evaluate a regression does not end here. There may be several issues 
 
 ```{r, eval=TRUE}
 # normality of residuals?
+install.packages("car")
 library(car)
 qqPlot(LinRegEPI, main="QQ Plot")
 ```
@@ -307,6 +331,7 @@ An easier way to interpret those values, as the effect on the probability of ocu
 
 
 ```{r, eval=TRUE}
+install.packages("margins")
 library(margins)
 margins_LogitEPI_a = margins(LogitEPI_a) 
 
@@ -345,6 +370,7 @@ predictedValues=predict(LogitEPI_a, type = 'response')
 
 Using the values above:
 ```{r, eval=TRUE}
+install.packages("InformationValue")
 library(InformationValue)
 
 cm=confusionMatrix(actualValues, predictedValues)
